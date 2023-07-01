@@ -6,13 +6,14 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  Image
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 
-export default function CreateQRItem({ isLoading, qrContent, addQR, onPress }) {
+export default function CreateQRItem({ isLoading, qrInfo, addQR, onPress }) {
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
-  const [content, setContent] = useState(qrContent);
+  const [content, setContent] = useState();
 
   const handleLatOnchange = (text) => {
     setLat(text);
@@ -24,7 +25,7 @@ export default function CreateQRItem({ isLoading, qrContent, addQR, onPress }) {
   const handleContentOnchange = (text) => {
     setContent(text);
   };
-
+  console.log("param content", qrInfo.qrContent);
   return (
     <View style={styles.container}>
       <Spinner visible={isLoading} />
@@ -53,9 +54,16 @@ export default function CreateQRItem({ isLoading, qrContent, addQR, onPress }) {
           value={content}
           onChangeText={handleContentOnchange}
         />
-
+        
         <Button title="Create" onPress={() => addQR(lat, lng, content)} />
+        
       </View>
+      <View style={styles.wrapperImage}>
+        <Image style={styles.preview} 
+          //source={{uri:`data:image/jpg;base64,${qrInfo.photo.base64}`}}
+          //source={{uri:  `${qrInfo?.qrInfo.photo.uri}`}}
+        />
+        </View>
     </View>
   );
 }
@@ -91,5 +99,18 @@ const styles = StyleSheet.create({
   },
   link: {
     color: "blue",
+  },
+  wrapperImage:{
+    flex:1,
+    marginTop:10,
+    backgroundColor:"yellow",
+    width:"50%",
+    height:"50%",
+  },
+  preview:{
+    alignSelf:"stretch",
+    width:"100%",
+    height:"100%",
+    flex:1
   },
 });

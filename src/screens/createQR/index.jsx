@@ -12,7 +12,7 @@ export default function CreateQRScreen() {
 
   let api = useAxios();
 
-  const { qrContent } = route.params ? route.params : "";
+  const qrInfo = route.params ? route.params : {};
 
   const handleScannerScreen = () => {
     navigation.navigate("scannerScreen");
@@ -44,7 +44,7 @@ export default function CreateQRScreen() {
     <CreateQRItem
       addQR={addQR}
       isLoading={isLoading}
-      qrContent={qrContent}
+      qrInfo={qrInfo}
       onPress={() => handleScannerScreen()}
     />
   );
