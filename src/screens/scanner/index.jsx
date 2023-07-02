@@ -14,6 +14,7 @@ import {
   ImageBackground, 
   Alert,
 } from "react-native";
+import moment from "moment";
 import { AuthContext } from "../../context";
 
 export default function ScannerScreen() {
@@ -31,7 +32,9 @@ export default function ScannerScreen() {
 
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [currentDateWithMoment, setCurrentDateWithMoment] = useState("");
   const [qrContent, setQrContent] = useState("");
+
 
   useEffect(() => {
     /*
@@ -68,9 +71,11 @@ export default function ScannerScreen() {
 
   //handle navigation to createQR Screen
   const handleNavigation = async () => {
+    
     navigation.navigate("createQRScreen", {
       qrContent: qrContent,
       photo:capturedImage,
+      date:currentDateWithMoment,
     });
   };
 
@@ -137,13 +142,30 @@ export default function ScannerScreen() {
     };
     try{
       let newPhoto = await cameraRef.current.takePictureAsync(options);
-      
+      getTime();
+      console.log(currentDateWithMoment);
       //setPhoto(newPhoto);
       setPreviewVisible(true);
       setCapturedImage(newPhoto);
     }catch(e){
       console.log("take pic error",e);
     }
+  }
+
+  const getTime = async () => {
+    console.log("get time");
+    /*
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    var hours = date.getHours();
+    var min = date.getMinutes();
+    var sec = date.getSeconds();
+    setCurrentDate(day + "/" + month + "/" + year + " " + hours + ":" + min + ":" + sec);
+    */
+    var dateMoment = moment().format("DD/MM/YYYY hh:mm:ss a");
+    setCurrentDateWithMoment(dateMoment);
   }
 
   /*

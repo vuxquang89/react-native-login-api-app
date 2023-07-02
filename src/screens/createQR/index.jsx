@@ -11,7 +11,6 @@ export default function CreateQRScreen() {
   const route = useRoute();
   const { isLoading, setIsLoading } = useContext(AuthContext);
 
-  const [currentDate, setCurrentDate] = useState("");
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
   const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
@@ -23,7 +22,7 @@ export default function CreateQRScreen() {
 
   useEffect(() => {
     buttonQR();
-    getTime();
+    
     CheckLocationEnabled();
     GetCurrentLocation();
   },[]);
@@ -90,17 +89,6 @@ export default function CreateQRScreen() {
     })
   }
 
-  const getTime = () => {
-    var date = new Date();
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-    var hours = date.getHours();
-    var min = date.getMinutes();
-    var sec = date.getSeconds();
-    setCurrentDate(day + "/" + month + "/" + year + " " + hours + ":" + min + ":" + sec);
-  }
-
   const handleScannerScreen = () => {
     navigation.navigate("scannerScreen");
   };
@@ -134,8 +122,7 @@ export default function CreateQRScreen() {
       qrInfo={qrInfo}
       latLocation={lat}
       lngLocation={lng}
-      currentAddress={currentAddress}
-      currentDate={currentDate}
+      currentAddress={currentAddress}  
       
     />
   );
