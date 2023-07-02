@@ -16,7 +16,7 @@ import ScannerScreen from "../../screens/scanner";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function Bottomtabs() {
+function BottomTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -59,13 +59,23 @@ function Bottomtabs() {
 
       <Tab.Screen
         options={{
-          title: "Create QR",
-          tabBarLabel: "Create QR",
+          title: "QR Code",
+          tabBarLabel: "QR Code",
           tabBarLabelStyle: {
             fontSize: 14,
             //color: "#006600",
           },
+          tabBarIcon: (tabInfo) => {
+            return (
+              <Ionicons
+                name="scan-sharp"
+                size={24}
+                color={tabInfo.focused ? "#006600" : "#8e8e93"}
+              />
+            );
+          },
         }}
+        
         name="createQRScreen"
         component={CreateQRScreen}
       />
@@ -112,7 +122,7 @@ export default function Navigation() {
                 headerShown: false,
               }}
               name="bottomTabs"
-              component={Bottomtabs}
+              component={BottomTabs}
             />
 
             <Stack.Screen

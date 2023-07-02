@@ -34,21 +34,20 @@ export default function CreateQRItem({ isLoading, qrInfo, addQR, currentDate}) {
             
           </View>
         </View>
-      <View style={styles.wrapper}>
+        <View style={styles.wrapper}>
         
-        <View style={styles.wrapperContentQR}>
-          <Text style={styles.title}>Content QR Code: </Text>
-          <Text style={styles.textContentQR}>{qrInfo ? qrInfo.qrContent : ""}</Text> 
+          <View style={styles.wrapperContentQR}>
+            <Text style={styles.title}>Content QR Code: </Text>
+            <Text style={styles.textContentQR}>{qrInfo ? qrInfo.qrContent : ""}</Text> 
+          </View>
+
+          <View style={styles.wrapperButtonUpload}>
+            <Button title="Upload" onPress={() => addQR(lat, lng, content)} />
+          </View> 
         </View>
-               
-        <Button title="Upload" onPress={() => addQR(lat, lng, content)} />
-        
-      </View>
-      
-        
         </>
-      ):(
-        <Text>Click button "Scanner" to get information</Text>
+        ):(
+          <Text>Click button "Scanner" to get information</Text>
       ) }
       
     </View>
@@ -90,15 +89,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 20,
   },
-  link: {
-    color: "blue",
+  wrapperButtonUpload:{
+    
+    alignSelf:"center",
+    alignItems:"center",
   },
   wrapperImage:{
     flex:1,
     backgroundColor:"yellow",
     width:"95%",
     height:"100%",
-    marginBottom:10,
   },
   preview:{
     alignSelf:"stretch",
