@@ -10,7 +10,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  Image
+  Image,
+  ImageBackground, 
+  Alert,
 } from "react-native";
 import { AuthContext } from "../../context";
 
@@ -19,6 +21,9 @@ export default function ScannerScreen() {
   let cameraRef = useRef(null);
   
   const [hasCameraPermission, setHasCameraPermission] = useState();
+  const [startCamera, setStartCamera] = useState(false);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null)
   const [photo, setPhoto] = useState();
 
   const [flashMode, setFlashMode] = useState("off");
@@ -29,18 +34,43 @@ export default function ScannerScreen() {
   const [qrContent, setQrContent] = useState("");
 
   useEffect(() => {
+    /*
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       const cameraPermission = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraPermission.status === "granted");
       setHasPermission(status === "granted");
     })();
+    */
+    __startBarCodeScanner();
+    __startCamera();
+
   }, []);
 
+  //set up start barcode scanner
+  const __startBarCodeScanner = async () => {
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === "granted");
+    
+  }
+
+
+  //set up start camera
+  const __startCamera = async () => {
+    const {status} = await Camera.requestCameraPermissionsAsync();
+    console.log("start camera");
+    if (status === 'granted') {
+      setStartCamera(true)
+    } else {
+      Alert.alert('Access denied')
+    }
+  }
+
+  //handle navigation to createQR Screen
   const handleNavigation = async () => {
     navigation.navigate("createQRScreen", {
       qrContent: qrContent,
-      photo:photo,
+      photo:capturedImage,
     });
   };
 
@@ -62,6 +92,15 @@ export default function ScannerScreen() {
     return <Text>No Access to Camera</Text>;
   }
 
+  const __savePhoto = () => {
+    console.log("save Photo");
+  }
+
+  const __retakePicture = () => {
+    console.log("retake picture");
+  }
+
+  //handle flash mode camera
   const __handleFlashMode = () => {
     if (flashMode === 'on') {
       setFlashMode('off')
@@ -73,15 +112,17 @@ export default function ScannerScreen() {
 
   }
 
+  //handle switch camera
   const __handleSwitchCamera = () => {
     if (cameraType === 'back' || cameraType === 0) {
       setCameraType('front')
     } else {
       setCameraType('back')
     }
-    console.log(cameraType);
+    
   }
 
+  //take picture function
   let takePic = async () => {
     let options = {
       quality: 1,
@@ -93,12 +134,15 @@ export default function ScannerScreen() {
     try{
       let newPhoto = await cameraRef.current.takePictureAsync(options);
       
-      setPhoto(newPhoto);
+      //setPhoto(newPhoto);
+      setPreviewVisible(true);
+      setCapturedImage(newPhoto);
     }catch(e){
-      console.log("error",e);
+      console.log("take pic error",e);
     }
   }
 
+  /*
   if(photo){
    
     console.log("view photo");
@@ -112,12 +156,15 @@ export default function ScannerScreen() {
         <Image style={styles.preview} source={{uri:"data:image/jpg;base64," + photo.base64}}/>
       </SafeAreaView>
     )
-    */
+    
   }
+  */
 
   return (
     <View style={styles.container} >
-      {scanned ? (
+      {scanned ? <>{previewVisible && capturedImage ? (
+        <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture}/>
+      ) : (
         <Camera style={styles.container} 
           ref={cameraRef}
           flashMode={flashMode}
@@ -137,7 +184,7 @@ export default function ScannerScreen() {
 
             >
               <Text style={styles.buttonFlip}>
-              {cameraType === 'front' ? '🤳' : '📷'}
+                {cameraType === 'front' ? '🤳' : '📷'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -164,8 +211,8 @@ export default function ScannerScreen() {
             </Text>
         </TouchableOpacity>
         </Camera>
-      ) :(
-        <>
+      )}</> : (
+      <>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanner}
         style={StyleSheet.absoluteFillObject}
@@ -177,6 +224,35 @@ export default function ScannerScreen() {
       )}
     </View>
   );
+}
+
+//Camera Preview
+const CameraPreview = ({photo, retakePicture, savePhoto}) => {
+  return (
+    <View style={styles.containerPreview}>
+      <ImageBackground
+        source={{uri : photo && photo.uri}}
+        style={styles.imageBackground}  
+      >
+        <View style={styles.wrapperButton}>
+          <View style={styles.borderButton}>
+            <TouchableOpacity
+              onPress={retakePicture}
+              style={styles.buttonItem}
+            >
+              <Text style={styles.iButton}>Re-take</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={savePhoto}
+              style={styles.buttonItem}
+            >
+              <Text style={styles.iButton}>Save-photo</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ImageBackground>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -226,5 +302,37 @@ const styles = StyleSheet.create({
   preview:{
     alignSelf:"stretch",
     flex:1
-  }
+  },
+  //style camera preview
+  containerPreview:{
+    backgroundColor: 'transparent',
+    flex: 1,
+    width: '100%',
+    height: '100%'
+  },
+  imageBackground:{
+    flex:1,
+  },
+  wrapperButton:{
+    flex: 1,
+    flexDirection: 'column',
+    padding: 15,
+    justifyContent: 'flex-end'
+  },
+  borderButton:{
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  buttonItem:{
+    width: 130,
+    height: 40,
+
+    alignItems: 'center',
+    borderRadius: 4
+  },
+  iButton:{
+    color: '#fff',
+    fontSize: 20
+  },
+
 });
