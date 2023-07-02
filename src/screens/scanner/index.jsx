@@ -21,6 +21,8 @@ export default function ScannerScreen() {
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [photo, setPhoto] = useState();
 
+  const [flashMode, setFlashMode] = useState("off");
+
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [qrContent, setQrContent] = useState("");
@@ -59,6 +61,17 @@ export default function ScannerScreen() {
     return <Text>No Access to Camera</Text>;
   }
 
+  const __handleFlashMode = () => {
+    if (flashMode === 'on') {
+      setFlashMode('off')
+    } else if (flashMode === 'off') {
+      setFlashMode('on')
+    } else {
+      setFlashMode('auto')
+    }
+
+  }
+
   let takePic = async () => {
     let options = {
       quality: 1,
@@ -95,7 +108,10 @@ export default function ScannerScreen() {
   return (
     <View style={styles.container} >
       {scanned ? (
-        <Camera style={styles.container} ref={cameraRef}>
+        <Camera style={styles.container} 
+          ref={cameraRef}
+          flashMode={flashMode}
+        >
           <View style={styles.containerTakePic}>
             <View style={styles.wrapperTakePic}>
                 <TouchableOpacity
@@ -104,6 +120,26 @@ export default function ScannerScreen() {
                 />
             </View>
           </View>
+          <TouchableOpacity
+            onPress={__handleFlashMode}
+            style={{
+              position: 'absolute',
+              left: '5%',
+              top: '10%',
+              backgroundColor: flashMode === 'off' ? '#000' : '#fff',
+              borderRadius: 50,
+              height: 25,
+              width: 25
+            }}
+          >
+            <Text
+              style={{
+              fontSize: 20
+              }}
+            >
+              ⚡️
+            </Text>
+        </TouchableOpacity>
         </Camera>
       ) :(
         <>
@@ -151,6 +187,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: '#fff'
   },
+  
   preview:{
     alignSelf:"stretch",
     flex:1
