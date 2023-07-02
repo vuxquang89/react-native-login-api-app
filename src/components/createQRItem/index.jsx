@@ -61,7 +61,7 @@ export default function CreateQRItem({ isLoading, qrInfo, addQR, onPress }) {
       <View style={styles.wrapperImage}>
         <Image style={styles.preview} 
           //source={{uri:`data:image/jpg;base64,${qrInfo.photo.base64}`}}
-          //source={{uri:  `${qrInfo?.qrInfo.photo.uri}`}}
+          source={{uri:  `${qrInfo && qrInfo.photo.uri}`}}
         />
         </View>
     </View>

@@ -94,6 +94,7 @@ export default function ScannerScreen() {
 
   const __savePhoto = () => {
     console.log("save Photo");
+    handleNavigation();
   }
 
   const __retakePicture = () => {
