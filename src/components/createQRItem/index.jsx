@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 
-export default function CreateQRItem({ isLoading, qrInfo, addQR, currentDate}) {
+export default function CreateQRItem({ isLoading, qrInfo, addQR, latLocation, lngLocation, currentAddress, currentDate}) {
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const [content, setContent] = useState();
@@ -30,8 +30,8 @@ export default function CreateQRItem({ isLoading, qrInfo, addQR, currentDate}) {
           />
           <View style={styles.wrapperContentTextImage}>
             <Text style={styles.textContentImage}>{currentDate}</Text>
-            <Text style={styles.textContentImage}>lat: {qrInfo ? qrInfo.qrContent : "NaN"}; lng: {qrInfo ? qrInfo.qrContent : "NaN"}</Text>
-            
+            <Text style={styles.textContentImage}>lat: {latLocation}; lng: {lngLocation}</Text>
+            <Text style={styles.textContentImage}>{currentAddress}</Text>
           </View>
         </View>
         <View style={styles.wrapper}>
