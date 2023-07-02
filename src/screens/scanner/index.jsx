@@ -13,8 +13,10 @@ import {
   Image,
   ImageBackground, 
   Alert,
+  Dimensions,
 } from "react-native";
 import moment from "moment";
+
 import { AuthContext } from "../../context";
 
 export default function ScannerScreen() {
@@ -34,6 +36,8 @@ export default function ScannerScreen() {
   const [scanned, setScanned] = useState(false);
   const [currentDateWithMoment, setCurrentDateWithMoment] = useState("");
   const [qrContent, setQrContent] = useState("");
+
+  const {width} = Dimensions.get("screen");
 
 
   useEffect(() => {
@@ -241,8 +245,29 @@ export default function ScannerScreen() {
       <>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanner}
-        style={StyleSheet.absoluteFillObject}
+        style={[StyleSheet.absoluteFillObject, styles.container]}
       />
+        <View style={{...StyleSheet.absoluteFill, alignItems:"center", justifyContent:"center"}}>
+          <View style={{width : width/2, height:width/2}}>
+            <View style={{flex:1, flexDirection:"row"}}>
+              <View style={{flex:1, ...styles.leftTop}}></View>
+              <View style={{flex:1}}></View>
+              <View style={{flex:1}}></View>
+              <View style={{flex:1}}></View>
+              <View style={{flex:1, ...styles.rightTop}}></View>
+            </View>
+            <View style={{flex:1}}></View>
+            <View style={{flex:1}}></View>
+            <View style={{flex:1}}></View>
+            <View style={{flex:1, flexDirection:"row"}}>
+              <View style={{flex:1, ...styles.leftBottom}}></View>
+              <View style={{flex:1}}></View>
+              <View style={{flex:1}}></View>
+              <View style={{flex:1}}></View>
+              <View style={{flex:1, ...styles.rightBottom}}></View>
+            </View>
+          </View>
+        </View>
       {scanned && (
         <Button title={`Tap to Scan again`} onPress={() => setScanned(false)} />
       )}
@@ -329,6 +354,27 @@ const styles = StyleSheet.create({
     alignSelf:"stretch",
     flex:1
   },
+  //style barcode masker
+  leftTop:{
+    borderLeftWidth:3,
+    borderTopWidth:3,
+    borderColor:"#fff",
+  },
+  leftBottom:{
+    borderLeftWidth:3,
+    borderBottomWidth:3,
+    borderColor:"#fff",
+  },
+  rightTop:{
+    borderRightWidth:3,
+    borderTopWidth:3,
+    borderColor:"#fff",
+  },
+  rightBottom:{
+    borderRightWidth:3,
+    borderBottomWidth:3,
+    borderColor:"#fff",
+  },
   //style camera preview
   containerPreview:{
     backgroundColor: 'transparent',
@@ -358,7 +404,10 @@ const styles = StyleSheet.create({
   },
   iButton:{
     color: '#fff',
-    fontSize: 20
+    fontSize: 20,
+    padding:3,
+    borderRadius:5,
+    backgroundColor:"rgba(52,52,52,0.5)",
   },
 
 });
