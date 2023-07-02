@@ -1,7 +1,7 @@
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native";
 import CreateQRItem from "../../components/createQRItem";
 import { AuthContext } from "../../context";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import useAxios from "../../utils/useAxios";
 
@@ -10,9 +10,41 @@ export default function CreateQRScreen() {
   const route = useRoute();
   const { isLoading, setIsLoading } = useContext(AuthContext);
 
+  const [currentDate, setCurrentDate] = useState("");
+
   let api = useAxios();
 
-  const qrInfo = route.params ? route.params : {};
+  const qrInfo = route.params ? route.params : false;
+
+  useEffect(() => {
+    buttonQR();
+    getTime();
+  },[]);
+
+  const buttonQR = () => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          
+          <Button 
+            onPress={() => handleScannerScreen()}
+            title="SCANNER"
+          />
+        )
+      }
+    })
+  }
+
+  const getTime = () => {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    var hours = date.getHours();
+    var min = date.getMinutes();
+    var sec = date.getSeconds();
+    setCurrentDate(day + "/" + month + "/" + year + " " + hours + ":" + min + ":" + sec);
+  }
 
   const handleScannerScreen = () => {
     navigation.navigate("scannerScreen");
@@ -45,7 +77,8 @@ export default function CreateQRScreen() {
       addQR={addQR}
       isLoading={isLoading}
       qrInfo={qrInfo}
-      onPress={() => handleScannerScreen()}
+      currentDate={currentDate}
+      
     />
   );
 }
