@@ -22,6 +22,7 @@ export default function ScannerScreen() {
   const [photo, setPhoto] = useState();
 
   const [flashMode, setFlashMode] = useState("off");
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
 
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -72,6 +73,15 @@ export default function ScannerScreen() {
 
   }
 
+  const __handleSwitchCamera = () => {
+    if (cameraType === 'back' || cameraType === 0) {
+      setCameraType('front')
+    } else {
+      setCameraType('back')
+    }
+    console.log(cameraType);
+  }
+
   let takePic = async () => {
     let options = {
       quality: 1,
@@ -111,6 +121,7 @@ export default function ScannerScreen() {
         <Camera style={styles.container} 
           ref={cameraRef}
           flashMode={flashMode}
+          type={cameraType}
         >
           <View style={styles.containerTakePic}>
             <View style={styles.wrapperTakePic}>
@@ -119,7 +130,19 @@ export default function ScannerScreen() {
                   style={styles.styleTakePic}
                 />
             </View>
+            
+            <TouchableOpacity 
+              onPress={__handleSwitchCamera}
+              style={styles.styleFlip}
+
+            >
+              <Text style={styles.buttonFlip}>
+              {cameraType === 'front' ? '🤳' : '📷'}
+              </Text>
+            </TouchableOpacity>
           </View>
+
+          
           <TouchableOpacity
             onPress={__handleFlashMode}
             style={{
@@ -187,7 +210,19 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: '#fff'
   },
-  
+  styleFlip:{
+    position:"absolute",
+    flex:1,
+    alignSelf:"center",
+    alignItems:"center",
+    left:"20%",
+    width:25,
+    height:25,
+  },
+  buttonFlip:{
+    textAlign:"center",
+    color:"#fff",
+  },
   preview:{
     alignSelf:"stretch",
     flex:1
