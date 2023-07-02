@@ -98,6 +98,9 @@ export default function ScannerScreen() {
 
   const __retakePicture = () => {
     console.log("retake picture");
+    setCapturedImage(null);
+    setPreviewVisible(false);
+    __startCamera();
   }
 
   //handle flash mode camera
