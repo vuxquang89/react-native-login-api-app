@@ -11,16 +11,12 @@ import {
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 
-export default function CreateQRItem({ isLoading, qrInfo, onUpload, latLocation, lngLocation, currentAddress}) {
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
-  const [content, setContent] = useState();
+export default function CreateQRItem({ isLoading, qrInfo, onUpload}) {
+  
 
   //console.log("param content", qrInfo.qrContent);
   return (
-    <View style={styles.container}
-      
-    >
+    <View style={styles.container}>
       <Spinner visible={isLoading} />
       {qrInfo ? (
         <>
@@ -45,7 +41,7 @@ export default function CreateQRItem({ isLoading, qrInfo, onUpload, latLocation,
           </View>
 
           <View style={styles.wrapperButtonUpload}>
-            <Button title="Upload" onPress={() => onUpload(qrInfo.lat, qrInfo.lng, qrInfo.photo.uri, qrInfo.qrContent)} />
+            <Button title="Upload" onPress={() => onUpload(qrInfo.lat, qrInfo.lng, qrInfo.photo, qrInfo.qrContent)} />
           </View> 
         </View>
         </>

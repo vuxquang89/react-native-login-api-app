@@ -103,24 +103,6 @@ export default function Navigation() {
               options={{
                 headerShown: false,
               }}
-              name="loginScreen"
-              component={LoginScreen}
-            ></Stack.Screen>
-
-            <Stack.Screen
-              options={{
-                headerShown: false,
-              }}
-              name="registerScreen"
-              component={RegisterScreen}
-            ></Stack.Screen>
-          </>
-        ) : (
-          <>
-            <Stack.Screen
-              options={{
-                headerShown: false,
-              }}
               name="bottomTabs"
               component={BottomTabs}
             />
@@ -132,6 +114,25 @@ export default function Navigation() {
               name="scannerScreen"
               component={ScannerScreen}
             />
+            
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="loginScreen"
+              component={LoginScreen}
+            ></Stack.Screen>
+
+            <Stack.Screen
+              options={{
+                headerShown: false,
+              }}
+              name="registerScreen"
+              component={RegisterScreen}
+            ></Stack.Screen>
           </>
           
         )}

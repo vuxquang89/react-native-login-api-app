@@ -51,16 +51,12 @@ export default function CreateQRScreen() {
       );
     }
 
-    GetCurrentLocation();
   }
-
-  
 
   const buttonQR = () => {
     navigation.setOptions({
       headerRight: () => {
         return (
-
           <Button 
             onPress={() => handleScannerScreen()}
             title="SCANNER"
@@ -78,39 +74,47 @@ export default function CreateQRScreen() {
     navigation.navigate("createQRScreen");
   }
 
-  const Upload = (lat, lng, uri, content) => {
-    //setIsLoading(true);
+  const Upload = (lat, lng, photo, content) => {
+    setIsLoading(true);
 
     //get the extension
-    const ext = uri.substring(uri.lastIndexOf(".") + 1);
+    const ext = photo.uri.substring(photo.uri.lastIndexOf(".") + 1);
     //get file name
-    const fileName = uri.replace(/^.*[\\\/]/,"");
+    const fileName = photo.uri.replace(/^.*[\\\/]/,"");
     console.log("file name upload", fileName);
 
     const formData = new FormData();
     formData.append("file", {
-      uri : uri,
-      fileName,      
+      uri : photo.uri,
+      name:fileName, 
+      type: photo.type ? `image/${ext}` : `video/${ext}`     
     });
     formData.append("lat", lat);
     formData.append("lng", lng);
     formData.append("content", content);
-    handleFreshScreen();
+    
     //qrInfo = false;
-    /*
+    
     let response = api
-      .post("/api/qr", formData)
+      .post("/api/qr", formData, 
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+ 
+          },
+        })
       .then((res) => {
         let result = res.data;
 
         setIsLoading(false);
         console.log(result);
+        handleFreshScreen();
       })
       .catch((e) => {
         setIsLoading(false);
-        console.log(`login error ${e}`);
+        console.log(`upload error ${e}`);
       });
-      */
+      
     /*
     if (response.status === 200) {
       setQRInfo(response.data);
