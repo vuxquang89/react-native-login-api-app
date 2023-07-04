@@ -11,20 +11,19 @@ export default function CreateQRScreen() {
   const route = useRoute();
   const { isLoading, setIsLoading } = useContext(AuthContext);
 
-  const [lat, setLat] = useState();
-  const [lng, setLng] = useState();
+  //const [qrInfo, setQRInfo] = useState();
   const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
-  const [currentAddress, setCurrentAddress] = useState("Wait, we are fetching you location...");
+  
 
   let api = useAxios();
 
   const qrInfo = route.params ? route.params : false;
+  //setQRInfo(route.params ? route.params : {});
 
   useEffect(() => {
     buttonQR();
-    
     CheckLocationEnabled();
-    GetCurrentLocation();
+    handleForegroundPermission();
   },[]);
 
   //check location enable
@@ -41,9 +40,7 @@ export default function CreateQRScreen() {
     }
   }
 
-  //create the handler method
-  //get current location
-  const GetCurrentLocation = async () => {
+  const handleForegroundPermission = async () => {
     let {status} = await Location.requestForegroundPermissionsAsync();
 
     if(status !== "granted"){
@@ -53,27 +50,11 @@ export default function CreateQRScreen() {
         {cancelable: false}
       );
     }
-    let {coords} = await Location.getCurrentPositionAsync();
 
-    if(coords){
-      const {latitude, longitude} = coords;
-      
-      setLat(coords.latitude);
-      setLng(coords.longitude);
-      let response = await Location.reverseGeocodeAsync({
-        latitude,
-        longitude
-      });
-      console.log("response", response);
-      for(let item of response){
-        let address = `${item.name}, ${item.street}, ${item.subregion}, ${item.region}`;
-        setCurrentAddress(address);
-      }
-    }    
-    
+    GetCurrentLocation();
   }
 
-  console.log(currentAddress);
+  
 
   const buttonQR = () => {
     navigation.setOptions({
@@ -93,10 +74,32 @@ export default function CreateQRScreen() {
     navigation.navigate("scannerScreen");
   };
 
-  const addQR = (lat, lng, content) => {
-    setIsLoading(true);
+  const handleFreshScreen = () => {
+    navigation.navigate("createQRScreen");
+  }
+
+  const Upload = (lat, lng, uri, content) => {
+    //setIsLoading(true);
+
+    //get the extension
+    const ext = uri.substring(uri.lastIndexOf(".") + 1);
+    //get file name
+    const fileName = uri.replace(/^.*[\\\/]/,"");
+    console.log("file name upload", fileName);
+
+    const formData = new FormData();
+    formData.append("file", {
+      uri : uri,
+      fileName,      
+    });
+    formData.append("lat", lat);
+    formData.append("lng", lng);
+    formData.append("content", content);
+    handleFreshScreen();
+    //qrInfo = false;
+    /*
     let response = api
-      .post("/api/qr", { lat, lng, content })
+      .post("/api/qr", formData)
       .then((res) => {
         let result = res.data;
 
@@ -107,7 +110,7 @@ export default function CreateQRScreen() {
         setIsLoading(false);
         console.log(`login error ${e}`);
       });
-
+      */
     /*
     if (response.status === 200) {
       setQRInfo(response.data);
@@ -117,13 +120,9 @@ export default function CreateQRScreen() {
 
   return (
     <CreateQRItem
-      addQR={addQR}
+      onUpload={Upload}
       isLoading={isLoading}
       qrInfo={qrInfo}
-      latLocation={lat}
-      lngLocation={lng}
-      currentAddress={currentAddress}  
-      
     />
   );
 }

@@ -6,18 +6,21 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
-  Image
+  Image,
+  RefreshControl,
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 
-export default function CreateQRItem({ isLoading, qrInfo, addQR, latLocation, lngLocation, currentAddress}) {
+export default function CreateQRItem({ isLoading, qrInfo, onUpload, latLocation, lngLocation, currentAddress}) {
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const [content, setContent] = useState();
 
   //console.log("param content", qrInfo.qrContent);
   return (
-    <View style={styles.container}>
+    <View style={styles.container}
+      
+    >
       <Spinner visible={isLoading} />
       {qrInfo ? (
         <>
@@ -30,8 +33,8 @@ export default function CreateQRItem({ isLoading, qrInfo, addQR, latLocation, ln
           />
           <View style={styles.wrapperContentTextImage}>
             <Text style={styles.textContentImage}>{qrInfo ? qrInfo.date : ""}</Text>
-            <Text style={styles.textContentImage}>lat: {latLocation}; lng: {lngLocation}</Text>
-            <Text style={styles.textContentImage}>{currentAddress}</Text>
+            <Text style={styles.textContentImage}>lat: {qrInfo.lat}; lng: {qrInfo.lng}</Text>
+            <Text style={styles.textContentImage}>{qrInfo.currentAddress}</Text>
           </View>
         </View>
         <View style={styles.wrapper}>
@@ -42,7 +45,7 @@ export default function CreateQRItem({ isLoading, qrInfo, addQR, latLocation, ln
           </View>
 
           <View style={styles.wrapperButtonUpload}>
-            <Button title="Upload" onPress={() => addQR(lat, lng, content)} />
+            <Button title="Upload" onPress={() => onUpload(qrInfo.lat, qrInfo.lng, qrInfo.photo.uri, qrInfo.qrContent)} />
           </View> 
         </View>
         </>

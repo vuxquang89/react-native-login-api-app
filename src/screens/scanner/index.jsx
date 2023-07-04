@@ -16,12 +16,18 @@ import {
   Dimensions,
 } from "react-native";
 import moment from "moment";
+import * as Location from "expo-location";
 
 import { AuthContext } from "../../context";
 
 export default function ScannerScreen() {
   const navigation = useNavigation();
   let cameraRef = useRef(null);
+
+  const [lat, setLat] = useState();
+  const [lng, setLng] = useState();
+ 
+  const [currentAddress, setCurrentAddress] = useState("Wait, we are fetching you location...");
   
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [startCamera, setStartCamera] = useState(false);
@@ -49,10 +55,39 @@ export default function ScannerScreen() {
       setHasPermission(status === "granted");
     })();
     */
+    
     __startBarCodeScanner();
     __startCamera();
+    GetCurrentLocation();
 
   }, []);
+
+  
+  //create the handler method
+  //get current location
+  const GetCurrentLocation = async () => {
+    
+    let {coords} = await Location.getCurrentPositionAsync();
+
+    if(coords){
+      const {latitude, longitude} = coords;
+      
+      setLat(coords.latitude);
+      setLng(coords.longitude);
+      let response = await Location.reverseGeocodeAsync({
+        latitude,
+        longitude
+      });
+      console.log("response", response);
+      for(let item of response){
+        let address = `${item.name}, ${item.street}, ${item.subregion}, ${item.region}`;
+        setCurrentAddress(address);
+      }
+    }    
+    
+  }
+  
+  console.log(currentAddress);
 
   //set up start barcode scanner
   const __startBarCodeScanner = async () => {
@@ -60,7 +95,6 @@ export default function ScannerScreen() {
     setHasPermission(status === "granted");
     
   }
-
 
   //set up start camera
   const __startCamera = async () => {
@@ -80,6 +114,9 @@ export default function ScannerScreen() {
       qrContent: qrContent,
       photo:capturedImage,
       date:currentDateWithMoment,
+      lat:lat,
+      lng:lng,
+      currentAddress:currentAddress,
     });
   };
 
