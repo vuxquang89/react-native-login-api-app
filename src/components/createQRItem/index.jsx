@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -11,8 +11,7 @@ import {
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 
-export default function CreateQRItem({ isLoading, qrInfo, onUpload}) {
-  
+export default function CreateQRItem({ isLoading, qrInfo, onUpload}) {  
 
   //console.log("param content", qrInfo.qrContent);
   return (
@@ -41,7 +40,7 @@ export default function CreateQRItem({ isLoading, qrInfo, onUpload}) {
           </View>
 
           <View style={styles.wrapperButtonUpload}>
-            <Button title="Upload" onPress={() => onUpload(qrInfo.lat, qrInfo.lng, qrInfo.photo, qrInfo.qrContent)} />
+            <Button title="Upload" onPress={() => onUpload(qrInfo.lat, qrInfo.lng, qrInfo.photo, qrInfo.qrContent, qrInfo.currentAddress, qrInfo.date)} />
           </View> 
         </View>
         </>

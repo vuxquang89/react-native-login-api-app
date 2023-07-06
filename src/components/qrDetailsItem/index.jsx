@@ -1,13 +1,27 @@
-import { View, Button, Image, StyleSheet, Text } from "react-native";
+import { View, Button, Image, StyleSheet, Text,Share } from "react-native";
 import { BASE_URL } from "../../config";
+import ViewShot from "react-native-view-shot";
+import { useRef, useState } from "react";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 
 export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
+  const viewToSnapshotRef = useRef();
+  const [snapShotImage, setSnapShotImage] = useState();
+
+  const captureViewShot = async () => {
+    const imageRUI = await viewToSnapshotRef.current.capture();
+    console.log("imageRUI: ", imageRUI);
+    Share.share({title:"Image", url:imageRUI});
+  }
     console.log("uri", `${BASE_URL}` + "/" +`${uri}`);
     return (
+      <>
       <View style={styles.container}>
         <Spinner visible={isLoading} />
-        <View style={styles.wrapperImage}>
+        <ViewShot style={styles.wrapperImage}           
+           ref={viewToSnapshotRef}
+           options={{format:"jpg", quality:1}}
+        >
           <Image style={styles.preview} 
             source={{uri:  `${BASE_URL}` + "/" +`${uri}`}}
           />
@@ -16,7 +30,8 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
             <Text style={styles.textContentImage}>lat: {qrDetailsData.lat}; lng: {qrDetailsData.lng}</Text>
             <Text style={styles.textContentImage}>{qrDetailsData.address}</Text>
           </View>
-        </View>
+        </ViewShot>
+        
         <View style={styles.wrapper}>
         
           <View style={styles.wrapperContentQR}>
@@ -27,6 +42,10 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
         </View>
         
       </View>
+      <View style={styles.wrapperShare}>
+      <Button title="share" onPress={()=>captureViewShot()}/>
+    </View>
+    </>
     );
 }
   
@@ -68,8 +87,9 @@ const styles = StyleSheet.create({
     wrapperImage:{
         flex:1,
         backgroundColor:"yellow",
-        width:"95%",
+        width:"100%",
         height:"100%",
+        marginTop:5,
     },
     preview:{
         alignSelf:"stretch",
@@ -85,5 +105,11 @@ const styles = StyleSheet.create({
     textContentImage:{
         color: "#fff",
         fontSize:15,
+    },
+    wrapperShare:{
+      flex:0.2,
+      position:"absolute",
+      top:"10%",
+      right:10,
     },
 });

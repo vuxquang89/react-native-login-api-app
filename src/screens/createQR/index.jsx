@@ -74,7 +74,7 @@ export default function CreateQRScreen() {
     navigation.navigate("createQRScreen");
   }
 
-  const Upload = (lat, lng, photo, content) => {
+  const Upload = (lat, lng, photo, content, address, dateTakePic) => {
     setIsLoading(true);
 
     //get the extension
@@ -85,13 +85,15 @@ export default function CreateQRScreen() {
 
     const formData = new FormData();
     formData.append("file", {
-      uri : photo.uri,
+      uri:photo.uri,
       name:fileName, 
-      type: photo.type ? `image/${ext}` : `video/${ext}`     
+      type: photo.type ? `image/${ext}` : `video/${ext}`,
     });
     formData.append("lat", lat);
     formData.append("lng", lng);
     formData.append("content", content);
+    formData.append("address", address);
+    formData.append("dateTakePic", dateTakePic);
     
     //qrInfo = false;
     
