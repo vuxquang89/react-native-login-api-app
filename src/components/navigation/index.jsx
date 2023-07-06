@@ -12,6 +12,7 @@ import SplashScreen from "../../screens/home/splashScreen";
 import LoginScreen from "../../screens/login";
 import RegisterScreen from "../../screens/register";
 import ScannerScreen from "../../screens/scanner";
+import QRDetails from "../../screens/qrDetails";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -113,6 +114,14 @@ export default function Navigation() {
               }}
               name="scannerScreen"
               component={ScannerScreen}
+            />
+
+            <Stack.Screen
+              options={{
+                title: "QR Details",
+              }}
+              name="qrDetails"
+              component={QRDetails}
             />
             
           </>

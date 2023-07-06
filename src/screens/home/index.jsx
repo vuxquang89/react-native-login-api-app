@@ -4,24 +4,26 @@ import { AuthContext } from "../../context";
 import useAxios from "../../utils/useAxios";
 import { View, FlatList, StyleSheet, Button } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
   let [qrInfoData, setQRInfoData] = useState();
   const { isLoading, setIsLoading, userInfo, onLogout } = useContext(AuthContext);
 
   let api = useAxios();
+  const navigation = useNavigation();
 
   
 
   let getData = async () => {
-    console.log("request");
-    setIsLoading(false);
+    //console.log("request");
+    setIsLoading(true);
     let response = await api.get("/api/qr")
       .then((res) => {
         let result = res.data;
 
         setIsLoading(false);
-        console.log(result[0]);
+        //console.log(result[0]);
         setQRInfoData(result);
       })
       .catch((e) => {
@@ -37,11 +39,18 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    console.log("get data");
+    //console.log("get data");
     getData();
   }, []);
 
-  console.log("qrInfo", qrInfoData);
+  const handleDetailsItem = (id) => {
+    console.log("qr id: ", id);
+    navigation.navigate("qrDetails", {
+      qrId: id,
+    })
+  }
+
+  //console.log("qrInfo", qrInfoData);
   
 
   return (
@@ -56,6 +65,7 @@ export default function HomeScreen() {
             address={itemData.item.address}
             date={itemData.item.dataUpload}
             uri={itemData.item.qrImages[0].uriResize}
+            onPress={() => handleDetailsItem(itemData.item.id)}
           />
         )}
         keyExtractor={(itemData) => itemData.id}

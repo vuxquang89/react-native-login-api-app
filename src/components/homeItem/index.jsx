@@ -2,13 +2,14 @@ import { Button, StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { BASE_URL } from "../../config";
 
 
-export default function HomeItem({ latLocation, lngLocation, address, date, uri }) {
-  console.log("uri", BASE_URL +"/"+ uri);
+export default function HomeItem({ latLocation, lngLocation, address, date, uri , onPress}) {
+  
   return (
     <View style={styles.itemContainer}>
       <Pressable 
         android_ripple={{color: "#ced474"}}  
         style={styles.pressableView}
+        onPress={onPress}
       >
         <View style={styles.wrapperImage}>
           <Image style={styles.preview} 
