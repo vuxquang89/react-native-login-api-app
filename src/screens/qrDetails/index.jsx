@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-
+import * as MediaLibrary from 'expo-media-library';
 import useAxios from "../../utils/useAxios";
 import { View, Button, StyleSheet } from "react-native";
 import { useRoute } from "@react-navigation/native";
@@ -14,12 +14,19 @@ export default function QRDetails(){
     const [isLoading, setIsLoading] = useState(false);
     const [qrDetailsData, setQRDetailsData] = useState([]);
     const [uri, setUri] = useState("");
+    const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
 
     
     useEffect(() => {
         console.log("get qr details");
         getQRInfoDetailsData();
+        handleMediaLibraryPermission();
     },[]);
+
+    const handleMediaLibraryPermission = async () => {
+        const mediaLibraryPermission = await MediaLibrary.requestPermissionsAsync();
+        setHasMediaLibraryPermission(mediaLibraryPermission.status === "granted");
+    }
 
     const getQRInfoDetailsData = async () => {
         setIsLoading(true);

@@ -1,6 +1,7 @@
 import { View, Button, Image, StyleSheet, Text,Share } from "react-native";
 //import {shareAsync} from "expo-sharing";
 import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
 import { FontAwesome } from '@expo/vector-icons';
 import { BASE_URL } from "../../config";
 import ViewShot from "react-native-view-shot";
@@ -35,10 +36,24 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
     */
   }
 
+  //share image
   const onShareImageAsync = async () => {
     try{
       const imageRUI = await viewToSnapshotRef.current.capture();
       await Sharing.shareAsync(imageRUI, {mimeType: "image/gif"});
+    }catch(e){
+      alert(e.message);
+    }
+  }
+
+  //save image
+  const onSaveImageAsync = async () => {
+    try{
+      const imageRUI = await viewToSnapshotRef.current.capture();
+      await MediaLibrary.saveToLibraryAsync(imageRUI);
+      if(imageRUI){
+        alert("Save successful!");
+      }
     }catch(e){
       alert(e.message);
     }
@@ -55,6 +70,7 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
         >
           <Image style={styles.preview} 
             source={{uri:  `${BASE_URL}` + "/" +`${uri}`}}
+            resizeMode="cover"
           />
           <View style={styles.wrapperContentTextImage}>
             <Text style={styles.textContentImage}>{qrDetailsData.dateUpload}</Text>
@@ -75,10 +91,14 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
       </View>
       <View style={styles.wrapperIcons}>
         <View style={styles.wrapperIconItem}>
-          <FontAwesome name="share" size={24} style={styles.styleButtonIcon} onPress={()=>onShareImageAsync()} />
+          <FontAwesome name="share" size={24} 
+            style={styles.styleButtonIcon} 
+            onPress={()=>onShareImageAsync()} />
         </View>
         <View style={styles.wrapperIconItem}>
-          <FontAwesome name="download" size={24} style={styles.styleButtonIcon} />
+          <FontAwesome name="download" size={24} 
+            style={styles.styleButtonIcon} 
+            onPress={()=>onSaveImageAsync()}/>
         </View>
     </View>
 
