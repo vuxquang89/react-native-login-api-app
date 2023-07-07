@@ -1,4 +1,7 @@
 import { View, Button, Image, StyleSheet, Text,Share } from "react-native";
+//import {shareAsync} from "expo-sharing";
+import * as Sharing from 'expo-sharing';
+import { FontAwesome } from '@expo/vector-icons';
 import { BASE_URL } from "../../config";
 import ViewShot from "react-native-view-shot";
 import { useRef, useState } from "react";
@@ -11,9 +14,37 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
   const captureViewShot = async () => {
     const imageRUI = await viewToSnapshotRef.current.capture();
     console.log("imageRUI: ", imageRUI);
-    Share.share({title:"Image", url:imageRUI});
+    Share.share({
+      title:"Image", 
+      //ios
+      url:imageRUI,
+      //android
+      message:imageRUI,
+    }, {
+      dialogTitle:"Share Image"
+    }).then(({action, activityType}) => {
+      if(action === Share.sharedAction)
+        console.log("Share was successful!");
+      else
+        console.log("Share was dismissed!");
+    }).catch(err => console.log(err));
+    /*
+    shareAsync(imageRUI).then(() => {
+      console.log("share...");
+    })
+    */
   }
-    console.log("uri", `${BASE_URL}` + "/" +`${uri}`);
+
+  const onShareImageAsync = async () => {
+    try{
+      const imageRUI = await viewToSnapshotRef.current.capture();
+      await Sharing.shareAsync(imageRUI, {mimeType: "image/gif"});
+    }catch(e){
+      alert(e.message);
+    }
+  }
+
+  //  console.log("uri", `${BASE_URL}` + "/" +`${uri}`);
     return (
       <>
       <View style={styles.container}>
@@ -42,9 +73,15 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
         </View>
         
       </View>
-      <View style={styles.wrapperShare}>
-      <Button title="share" onPress={()=>captureViewShot()}/>
+      <View style={styles.wrapperIcons}>
+        <View style={styles.wrapperIconItem}>
+          <FontAwesome name="share" size={24} style={styles.styleButtonIcon} onPress={()=>onShareImageAsync()} />
+        </View>
+        <View style={styles.wrapperIconItem}>
+          <FontAwesome name="download" size={24} style={styles.styleButtonIcon} />
+        </View>
     </View>
+
     </>
     );
 }
@@ -106,10 +143,24 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize:15,
     },
-    wrapperShare:{
+    wrapperIcons:{
       flex:0.2,
       position:"absolute",
       top:"10%",
-      right:10,
+      right:20,
+      
+    },
+    wrapperIconItem:{
+      backgroundColor:"#5e5c5cc2",
+      borderRadius:50,
+      width:40,
+      height:40,
+      marginBottom:20,
+      justifyContent:"center",
+      alignItems:"center"
+    },
+    styleButtonIcon:{
+      color:"white",
+      
     },
 });
