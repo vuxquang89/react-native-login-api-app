@@ -14,7 +14,7 @@ import { AuthContext } from "../../context";
 export default function LoginScreen() {
   const navigation = useNavigation();
 
-  const { isLoading, login } = useContext(AuthContext);
+  const { isLoading, login, loginGoogle } = useContext(AuthContext);
 
   const handleOnRegisterScreen = () => {
     navigation.navigate("registerScreen");
@@ -23,6 +23,7 @@ export default function LoginScreen() {
   return (
     <LoginItem
       login={login}
+      loginGoogle={loginGoogle}
       isLoading={isLoading}
       onPress={() => handleOnRegisterScreen()}
     />

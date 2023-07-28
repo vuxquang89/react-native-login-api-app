@@ -10,6 +10,53 @@ const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
+  //const api = useAxios();
+
+  const loginGoogle = (idToken) => {
+    setIsLoading(true);
+
+    axios
+      .post(`${BASE_URL}/api/auth/user/google`, {
+        idToken,
+      })
+      .then((res) => {
+        const userInfo = res.data;
+        console.log(res.data);
+        setIsLoading(false);
+        //setUserInfo(userInfo);
+        //AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+      })
+      .catch((e) => {
+        setIsLoading(false);
+        console.log("error", e);
+      });
+
+    /*
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      idToken: idToken,
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    fetch(`${BASE_URL}/api/auth/user/google`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data", data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log("error", error);
+        setIsLoading(false);
+      });
+      */
+  };
 
   const login = (username, password) => {
     setIsLoading(true);
@@ -98,6 +145,7 @@ const AuthProvider = ({ children }) => {
         setUserInfo,
         splashLoading,
         login,
+        loginGoogle,
         onRegister,
         onLogout,
       }}
