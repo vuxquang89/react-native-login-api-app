@@ -16,15 +16,15 @@ const AuthProvider = ({ children }) => {
     setIsLoading(true);
 
     axios
-      .post(`${BASE_URL}/api/auth/user/google`, {
+      .post(`${BASE_URL}/api/auth/google/verify`, {
         idToken,
       })
       .then((res) => {
-        const userInfo = res.data;
-        console.log(res.data);
+        let userInfo = res.data;
+        setUserInfo(userInfo);
+        AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
         setIsLoading(false);
-        //setUserInfo(userInfo);
-        //AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+        console.log(userInfo);
       })
       .catch((e) => {
         setIsLoading(false);

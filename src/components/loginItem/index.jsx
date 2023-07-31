@@ -8,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
+import { FontAwesome } from '@expo/vector-icons';
 import Spinner from "react-native-loading-spinner-overlay/lib";
 
 import * as WebBrowser from "expo-web-browser";
@@ -51,9 +52,10 @@ export default function LoginItem({ login, loginGoogle, isLoading, onPress }) {
     if (!user) {
       if (response?.type === "success") {
         console.log("response", response);
-        console.log("idToken", response.authentication.idToken);
-        setUserInfo(response.authentication.idToken);
+        
+        //setUserInfo(response.authentication.idToken);
         //await getUserInfo(response.authentication.accessToken);
+        await getUserInfo(response.authentication.idToken);
       }
     } else {
       setUserInfo(JSON.parse(user));
@@ -62,8 +64,9 @@ export default function LoginItem({ login, loginGoogle, isLoading, onPress }) {
 
   const getUserInfo = async (token) => {
     if (!token) return;
+    /*
     try {
-      const response = await fetch("", {
+      const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
         headers: { Authurization: `Bearer ${token}` },
       });
 
@@ -71,7 +74,8 @@ export default function LoginItem({ login, loginGoogle, isLoading, onPress }) {
       await AsyncStorage.setItem("@user", JSON.stringify(user));
       setUserInfo(user);
     } catch (error) {}
-    //loginGoogle(token);
+    */
+    loginGoogle(token);
   };
 
   const handleUsernameOnchange = (text) => {
@@ -86,7 +90,7 @@ export default function LoginItem({ login, loginGoogle, isLoading, onPress }) {
     <View style={styles.container}>
       <Spinner visible={isLoading} />
       <View style={styles.wrapper}>
-        <Text>ID Token: {JSON.stringify(userInfo)}</Text>
+        
         <Text style={styles.titleLogin}>Login</Text>
         <TextInput
           style={styles.input}
@@ -105,15 +109,14 @@ export default function LoginItem({ login, loginGoogle, isLoading, onPress }) {
 
         <Button title="Login" onPress={() => login(username, password)} />
 
-        <View>
-          <Button title="Login with Google" onPress={() => promptAsync()} />
+        <View style={styles.wrapperButtonLoginGoogle}>
+          <FontAwesome name="google" size={24} 
+            style={styles.styleButtonIcon} 
+            onPress={() => promptAsync()} >
+            <Text> Login with Google </Text>
+          </FontAwesome>    
         </View>
-        <View>
-          <Button
-            title="Delete local storage"
-            onPress={() => AsyncStorage.removeItem("@user")}
-          />
-        </View>
+        
         <View style={styles.wrapperBottom}>
           <Text>Don't have account?</Text>
           <TouchableOpacity onPress={onPress}>
@@ -146,9 +149,25 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 14,
   },
+  wrapperButtonLoginGoogle:{
+    marginTop: 15,
+  },
   wrapperBottom: {
     flexDirection: "row",
     marginTop: 20,
+  },
+  styleButtonIcon:{
+    color: "white",
+    backgroundColor: "#2172f5",
+    textAlign: "center",
+    fontSize: 20,
+    padding: 8,
+    borderRadius: 5,
+    shadowRadius: 4.65,
+    shadowOpacity: 0.29,
+    elevation: 5,
+    shadowOffset: {width: 0, height: 3},
+    shadowColor: "#000",
   },
   link: {
     color: "blue",

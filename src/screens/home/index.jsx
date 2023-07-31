@@ -63,12 +63,14 @@ export default function HomeScreen() {
             latLocation={itemData.item.lat}
             lngLocation={itemData.item.lng}
             address={itemData.item.address}
-            date={itemData.item.dataUpload}
+            date={itemData.item.dateUpload}
             uri={itemData.item.qrImages[0].uriResize}
             onPress={() => handleDetailsItem(itemData.item.id)}
           />
         )}
         keyExtractor={(itemData) => itemData.id}
+        refreshing={isLoading}
+        onRefresh={getData}
         numColumns={2}
       />
       <Button title="Logout" onPress={()=>onLogout()}/>
