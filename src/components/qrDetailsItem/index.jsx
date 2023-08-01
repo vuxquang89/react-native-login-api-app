@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     },
     wrapperImage:{
         flex:1,
-        backgroundColor:"yellow",
+        backgroundColor:"#c4c4c4",
         width:"100%",
         height:"100%",
         marginTop:5,

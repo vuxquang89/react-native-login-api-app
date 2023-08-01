@@ -21,7 +21,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -45,6 +47,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "scheme": "react-native-login-api-app"
+    "scheme": "react-native-login-api-app",
+    "extra": {
+      "eas": {
+        "projectId": "3bdc16fa-ad57-431a-8303-2d87e10347c4"
+      }
+    }
   }
 }

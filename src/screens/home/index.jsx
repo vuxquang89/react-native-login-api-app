@@ -7,7 +7,11 @@ import Spinner from "react-native-loading-spinner-overlay/lib";
 import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
-  let [qrInfoData, setQRInfoData] = useState();
+  const [qrInfoData, setQRInfoData] = useState([]);
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
+
   const { isLoading, setIsLoading, userInfo, onLogout } = useContext(AuthContext);
 
   let api = useAxios();
@@ -18,16 +22,19 @@ export default function HomeScreen() {
   let getData = async () => {
     //console.log("request");
     setIsLoading(true);
-    let response = await api.get("/api/qr")
+    let response = await api.get(`/api/qr?page=${currentPage}&limit=6`)
       .then((res) => {
         let result = res.data;
 
         setIsLoading(false);
-        //console.log(result[0]);
-        setQRInfoData(result);
+        setRefreshing(false);
+        //console.log(result);
+        setQRInfoData([...qrInfoData, ...result]);
+        //setQRInfoData(result);
       })
       .catch((e) => {
         setIsLoading(false);
+        setRefreshing(false);
         console.log(`get data error ${e}`);
       });
     /*
@@ -38,10 +45,28 @@ export default function HomeScreen() {
     */
   };
 
+  const loadMoreItem = () => {
+    console.log("load more item");
+    setCurrentPage(currentPage + 1);
+    
+    //getData();
+  }
+
+  const handleRefresh = () => {
+    console.log("refresh");
+    setRefreshing(true);
+    
+    setQRInfoData([]);
+    
+    setCurrentPage(1);
+    console.log("after refresh", qrInfoData);
+    //getData();
+  }
+
   useEffect(() => {
-    //console.log("get data");
+    
     getData();
-  }, []);
+  }, [currentPage]);
 
   const handleDetailsItem = (id) => {
     console.log("qr id: ", id);
@@ -68,9 +93,12 @@ export default function HomeScreen() {
             onPress={() => handleDetailsItem(itemData.item.id)}
           />
         )}
-        keyExtractor={(itemData) => itemData.id}
-        refreshing={isLoading}
-        onRefresh={getData}
+        //keyExtractor={(itemData) => itemData.id}
+        keyExtractor={(item, index) => String(index)}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
+        onEndReached={loadMoreItem}
+        onEndReachedThreshold={0}
         numColumns={2}
       />
       <Button title="Logout" onPress={()=>onLogout()}/>
@@ -85,4 +113,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  itemData:{
+    flex: 1,
+  }
 })

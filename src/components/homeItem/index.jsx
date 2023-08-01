@@ -18,10 +18,10 @@ export default function HomeItem({ latLocation, lngLocation, address, date, uri 
           />
           <View style={styles.wrapperContentTextImage}>
             <Text style={styles.textContentImage}>{date}</Text>
-            <Text style={styles.textContentImage}>lat: {latLocation}; lng: {lngLocation}</Text>
-            <Text style={styles.textContentImage}>{address}</Text>
+            
           </View>
         </View>
+        
       </Pressable>
       
     </View>
@@ -30,10 +30,10 @@ export default function HomeItem({ latLocation, lngLocation, address, date, uri 
 
 const styles = StyleSheet.create({
   itemContainer: {
-    flex: 1,
-    margin:16,
-    height:180,
-    borderRadius:8,
+    flex: 1/2,
+    margin: 8,
+    height: 180,
+    borderRadius: 8,
   },
   pressableView:{
     flex:1,
@@ -41,15 +41,17 @@ const styles = StyleSheet.create({
   
   wrapperImage:{
     flex:1,
-    backgroundColor:"yellow",
+    backgroundColor:"#c4c4c4",
     width:"95%",
     height:"100%",
+    borderRadius: 8,
   },
   preview:{
     alignSelf:"stretch",
     width:"100%",
     height:"100%",
-    flex:1
+    flex:1,
+    borderRadius: 8,
   },
   wrapperContentTextImage:{
     position: "absolute",
@@ -60,4 +62,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize:12,
   },
+  styleText:{
+    fontSize: 12,
+  }
 });
