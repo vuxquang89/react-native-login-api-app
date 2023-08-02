@@ -10,12 +10,14 @@ import {
   RefreshControl,
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import FlashMessage from "react-native-flash-message";
 
 export default function CreateQRItem({ isLoading, qrInfo, onUpload}) {  
 
   //console.log("param content", qrInfo.qrContent);
   return (
     <View style={styles.container}>
+      <FlashMessage position="center" />
       <Spinner visible={isLoading} />
       {qrInfo ? (
         <>

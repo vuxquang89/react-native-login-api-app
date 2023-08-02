@@ -5,6 +5,7 @@ import { useContext, useState, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import useAxios from "../../utils/useAxios";
+import { showMessage } from "react-native-flash-message";
 
 export default function CreateQRScreen() {
   const navigation = useNavigation();
@@ -109,11 +110,21 @@ export default function CreateQRScreen() {
 
         setIsLoading(false);
         console.log(result);
+        showMessage({
+          message: "Upload successful!",
+          //description: "My message description",
+          type: "success",
+        });
         handleFreshScreen();
       })
       .catch((e) => {
         setIsLoading(false);
         console.log(`upload error ${e}`);
+        showMessage({
+          message: "Error",
+          description: e,
+          type: "danger",
+        });
       });
       
     /*

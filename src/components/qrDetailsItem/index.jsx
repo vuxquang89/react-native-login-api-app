@@ -7,6 +7,7 @@ import { BASE_URL } from "../../config";
 import ViewShot from "react-native-view-shot";
 import { useRef, useState } from "react";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import FlashMessage,{ showMessage } from "react-native-flash-message";
 
 export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
   const viewToSnapshotRef = useRef();
@@ -41,6 +42,7 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
     try{
       const imageRUI = await viewToSnapshotRef.current.capture();
       await Sharing.shareAsync(imageRUI, {mimeType: "image/gif"});
+      
     }catch(e){
       alert(e.message);
     }
@@ -52,7 +54,11 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
       const imageRUI = await viewToSnapshotRef.current.capture();
       await MediaLibrary.saveToLibraryAsync(imageRUI);
       if(imageRUI){
-        alert("Save successful!");
+        showMessage({
+          message: "Save successful!",
+          //description: "My message description",
+          type: "success",
+        });
       }
     }catch(e){
       alert(e.message);
@@ -63,6 +69,9 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
     return (
       <>
       <View style={styles.container}>
+        
+        <FlashMessage position="center" />
+
         <Spinner visible={isLoading} />
         <ViewShot style={styles.wrapperImage}           
            ref={viewToSnapshotRef}
@@ -101,7 +110,7 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
             onPress={()=>onSaveImageAsync()}/>
         </View>
     </View>
-
+    
     </>
     );
 }
