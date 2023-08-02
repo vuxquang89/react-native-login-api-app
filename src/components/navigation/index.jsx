@@ -53,9 +53,16 @@ function BottomTabs() {
               />
             );
           },
+
+          unmountOnBlur: true,//reload screen
         }}
         name="homeScreen"
         component={HomeScreen}
+
+        //reload screen
+        listeners={({navigation}) => ({
+          blur: () => navigation.setParams({screen : undefined})
+        })}
       ></Stack.Screen>
 
       <Tab.Screen

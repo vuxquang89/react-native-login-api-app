@@ -5,8 +5,10 @@ import useAxios from "../../utils/useAxios";
 import { View, FlatList, StyleSheet, Button } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function HomeScreen() {
+
   const [qrInfoData, setQRInfoData] = useState([]);
   
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,8 +18,6 @@ export default function HomeScreen() {
 
   let api = useAxios();
   const navigation = useNavigation();
-
-  
 
   let getData = async () => {
     //console.log("request");
@@ -48,23 +48,17 @@ export default function HomeScreen() {
   const loadMoreItem = () => {
     console.log("load more item");
     setCurrentPage(currentPage + 1);
-    
-    //getData();
   }
 
   const handleRefresh = () => {
     console.log("refresh");
-    setRefreshing(true);
-    
-    setQRInfoData([]);
-    
-    setCurrentPage(1);
-    console.log("after refresh", qrInfoData);
+    setRefreshing(true);    
+    setQRInfoData([]);    
+    setCurrentPage(1);    
     //getData();
   }
 
-  useEffect(() => {
-    
+  useEffect(() => {    
     getData();
   }, [currentPage]);
 
