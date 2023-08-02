@@ -16,11 +16,12 @@ import * as Google from "expo-auth-session/providers/google";
 //import * as AuthSession from "expo-auth-session";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginItem({ login, loginGoogle, isLoading, onPress }) {
-  const [username, setUsername] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const [userInfo, setUserInfo] = useState(null);
 
@@ -106,8 +107,14 @@ export default function LoginItem({ login, loginGoogle, isLoading, onPress }) {
           onChangeText={handlePasswordOnchange}
           secureTextEntry
         />
-
-        <Button title="Login" onPress={() => login(username, password)} />
+        {username == "" || password == "" ? (
+          <Button 
+            disabled
+            title="Login"  />
+          ):(
+          <Button title="Login" onPress={() => login(username, password)} />
+        )}
+        
 
         <View style={styles.wrapperButtonLoginGoogle}>
           <FontAwesome name="google" size={24} 

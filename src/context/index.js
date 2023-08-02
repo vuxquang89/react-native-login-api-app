@@ -2,6 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useEffect } from "react";
 import { createContext, useState } from "react";
+import { Alert } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { BASE_URL } from "../config";
 
 export const AuthContext = createContext(null);
@@ -71,6 +73,7 @@ const AuthProvider = ({ children }) => {
       })
       .catch((e) => {
         setIsLoading(false);
+        Alert.alert("Warning","username or password is incorrect!",[{text:"OK"}]);        
         console.log(`login error ${e}`);
       });
   };
