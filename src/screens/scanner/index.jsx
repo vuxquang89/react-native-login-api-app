@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 import { Camera } from "expo-camera";
 import {
   View,
@@ -27,7 +28,8 @@ export default function ScannerScreen() {
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
  
-  const [currentAddress, setCurrentAddress] = useState("Wait, we are fetching you location...");
+  const [currentAddress, setCurrentAddress] = useState("Wait");
+  const [isGetting, setIsGetting] = useState(false);
   
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [startCamera, setStartCamera] = useState(false);
@@ -83,7 +85,7 @@ export default function ScannerScreen() {
         let address = `${item.name}, ${item.street}, ${item.subregion}, ${item.region}`;
         setCurrentAddress(address);
       }
-    }    
+    } 
     
   }
   
@@ -109,15 +111,26 @@ export default function ScannerScreen() {
 
   //handle navigation to createQR Screen
   const handleNavigation = async () => {
-    
-    navigation.navigate("createQRScreen", {
-      qrContent: qrContent,
-      photo:capturedImage,
-      date:currentDateWithMoment,
-      lat:lat,
-      lng:lng,
-      currentAddress:currentAddress,
-    });
+    if(currentAddress === "Wait"){
+      Alert.alert('Warning', 'Unable to get location information!', [
+        
+        {text: 'OK', onPress: () => {
+          console.log("is get");
+          setIsGetting(true);
+          GetCurrentLocation();
+          setIsGetting(false);
+        }},
+      ]);
+    }else{
+      navigation.navigate("createQRScreen", {
+        qrContent: qrContent,
+        photo:capturedImage,
+        date:currentDateWithMoment,
+        lat:lat,
+        lng:lng,
+        currentAddress:currentAddress,
+      });
+    }
   };
 
   const handleBarCodeScanner = ({ type, data }) => {
@@ -190,6 +203,10 @@ export default function ScannerScreen() {
       setCapturedImage(newPhoto);
     }catch(e){
       console.log("take pic error",e);
+      Alert.alert("Take Picture Error", e,
+        [{text:"OK"}],
+        {cancelable: false}
+      );
     }
   }
 
@@ -205,7 +222,7 @@ export default function ScannerScreen() {
     var sec = date.getSeconds();
     setCurrentDate(day + "/" + month + "/" + year + " " + hours + ":" + min + ":" + sec);
     */
-    var dateMoment = moment().format("DD/MM/YYYY hh:mm:ss a");
+    var dateMoment = moment().format("DD/MM/YYYY HH:mm:ss");
     setCurrentDateWithMoment(dateMoment);
   }
 
@@ -229,6 +246,8 @@ export default function ScannerScreen() {
 
   return (
     <View style={styles.container} >
+      <Spinner visible={isGetting} />
+
       {scanned ? <>{previewVisible && capturedImage ? (
         <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture}/>
       ) : (
