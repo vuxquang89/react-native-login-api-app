@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import FlashMessage from "react-native-flash-message";
 import {isValidEmail, isValidUsername, isValidPassword} from "../../utils/Validations";
 
 export default function RegisterItem({ onRegister, isLoading, onPress }) {
@@ -53,6 +54,7 @@ export default function RegisterItem({ onRegister, isLoading, onPress }) {
 
   return (
     <View style={styles.container}>
+      <FlashMessage position="center"/>
       <Spinner visible={isLoading} />
       <View style={styles.wrapper}>
         <Text style={styles.titleRegister}>Register</Text>

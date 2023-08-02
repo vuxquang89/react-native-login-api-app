@@ -83,11 +83,25 @@ const AuthProvider = ({ children }) => {
     axios
       .post(`${BASE_URL}/api/auth/register`, { username, email, password })
       .then((res) => {
-        let userInfo = res.data;
-        setUserInfo(userInfo);
-        AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+        let result = res.data;
+        if(result.status == 201){
+          showMessage({
+            message: "Warning",
+            description: result.message,
+            type: "warning",
+          });
+          
+        }else{
+          showMessage({
+            message: "Success",
+            description: "Register successful!",
+            type: "success",
+          });
+          setUserInfo(result);
+          AsyncStorage.setItem("userInfo", JSON.stringify(result));        
+        }
         setIsLoading(false);
-        console.log(userInfo);
+        console.log(result);
       })
       .catch((e) => {
         setIsLoading(false);
