@@ -30,6 +30,7 @@ export default function UserInfoScreen(){
         
         <UserInfoItem 
             userInfo={userInfo}
+            isLoading={isLoading}
         />            
         
     );

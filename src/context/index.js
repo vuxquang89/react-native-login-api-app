@@ -120,12 +120,26 @@ const AuthProvider = ({ children }) => {
         }
       )
       .then((res) => {
-        AsyncStorage.removeItem("userInfo");
-        setUserInfo({});
+        console.log("logout",res.data);
+        if(res.data.status == 200){
+          AsyncStorage.removeItem("userInfo");
+          setUserInfo({});
+        }else{
+          showMessage({
+            message: "Error",
+            description: "Cannot logout",
+            type: "danger",
+          });
+        }        
         setIsLoading(false);
       })
       .catch((e) => {
         console.log(`logout error ${e}`);
+        showMessage({
+          message: "Error",
+          description: e,
+          type: "danger",
+        });
         setIsLoading(false);
       });
   };

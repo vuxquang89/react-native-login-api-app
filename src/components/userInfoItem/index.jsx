@@ -1,9 +1,13 @@
 import { Button, StyleSheet, View, Text} from "react-native";
+import FlashMessage from "react-native-flash-message";
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
-export default function UserInfoItem({userInfo }) {
+export default function UserInfoItem({isLoading, userInfo }) {
 
     return (
         <View style = {styles.container}>
+            <FlashMessage position="center"/>
+            <Spinner visible={isLoading} />
             <View style={styles.styleWrapper}>
                 <Text style={styles.styleText}>Welcome {userInfo.username}</Text>
             </View>
