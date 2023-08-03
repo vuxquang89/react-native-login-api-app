@@ -14,7 +14,7 @@ export default function HomeScreen() {
   const [currentPage, setCurrentPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
 
-  const { isLoading, setIsLoading, userInfo, onLogout } = useContext(AuthContext);
+  const { isLoading, setIsLoading } = useContext(AuthContext);
 
   let api = useAxios();
   const navigation = useNavigation();
@@ -95,7 +95,7 @@ export default function HomeScreen() {
         onEndReachedThreshold={0}
         numColumns={2}
       />
-      <Button title="Logout" onPress={()=>onLogout()}/>
+      
     </View>
     
   );

@@ -13,6 +13,7 @@ import LoginScreen from "../../screens/login";
 import RegisterScreen from "../../screens/register";
 import ScannerScreen from "../../screens/scanner";
 import QRDetails from "../../screens/qrDetails";
+import UserInfoScreen from "../../screens/userInfo";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -86,6 +87,30 @@ function BottomTabs() {
         
         name="createQRScreen"
         component={CreateQRScreen}
+      />
+
+      <Tab.Screen
+        options={{
+          title: "Infomation",
+          tabBarLabel: "Info",
+          tabBarLabelStyle: {
+            fontSize: 14,
+            //color: "#006600",
+          },
+          tabBarIcon: (tabInfo) => {
+            return (
+              
+              <Ionicons
+                name="information-circle-outline"
+                size={24}
+                color={tabInfo.focused ? "#006600" : "#8e8e93"}
+              />
+            );
+          },
+        }}
+        
+        name="userInfoScreen"
+        component={UserInfoScreen}
       />
     </Tab.Navigator>
   );
