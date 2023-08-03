@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import FlashMessage from "react-native-flash-message";
 
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
@@ -56,12 +57,14 @@ export default function LoginItem({ login, loginGoogle, isLoading, onPress }) {
         
         //setUserInfo(response.authentication.idToken);
         //await getUserInfo(response.authentication.accessToken);
+        
         await getUserInfo(response.authentication.idToken);
       }
     } else {
       setUserInfo(JSON.parse(user));
     }
   }
+
 
   const getUserInfo = async (token) => {
     if (!token) return;
@@ -89,6 +92,7 @@ export default function LoginItem({ login, loginGoogle, isLoading, onPress }) {
 
   return (
     <View style={styles.container}>
+      <FlashMessage position="center"/>
       <Spinner visible={isLoading} />
       <View style={styles.wrapper}>
         

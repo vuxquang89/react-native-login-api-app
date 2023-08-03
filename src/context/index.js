@@ -31,6 +31,11 @@ const AuthProvider = ({ children }) => {
       .catch((e) => {
         setIsLoading(false);
         console.log("error", e);
+        showMessage({
+          message: "Error",
+          description: "Cannot login",
+          type: "danger",
+        });
       });
 
     /*
@@ -121,7 +126,7 @@ const AuthProvider = ({ children }) => {
       )
       .then((res) => {
         console.log("logout",res.data);
-        if(res.data.status == 200){
+        if(res.data.status == 200 || res.data.status == 201 || res.data.status == "202"){
           AsyncStorage.removeItem("userInfo");
           setUserInfo({});
         }else{
