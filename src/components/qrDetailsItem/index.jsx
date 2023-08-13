@@ -1,15 +1,16 @@
-import { View, Button, Image, StyleSheet, Text,Share } from "react-native";
+import { View, Button, Image, StyleSheet, Text,Share, Alert } from "react-native";
 //import {shareAsync} from "expo-sharing";
 import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { BASE_URL } from "../../config";
 import ViewShot from "react-native-view-shot";
 import { useRef, useState } from "react";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import FlashMessage,{ showMessage } from "react-native-flash-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
+export default function QRDetailsItem({ qrDetailsData, uri, isLoading, deleteItem }) {
   const viewToSnapshotRef = useRef();
   const [snapShotImage, setSnapShotImage] = useState();
 
@@ -65,6 +66,25 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
     }
   }
 
+  //delete image
+
+  const displayDeleteAlert = () => {
+    Alert.alert("Are You Sure", "This action will delete your image!",
+      [
+        {
+          text: "Delete",
+          onPress: () => deleteItem(),
+        },
+        {
+          text: "No Thanks",
+          onPress: () => console.log("no thanks"),
+        },
+      ],{
+        cancelable: true,
+      })
+  }
+
+
   //  console.log("uri", `${BASE_URL}` + "/" +`${uri}`);
     return (
       <>
@@ -109,6 +129,7 @@ export default function QRDetailsItem({ qrDetailsData, uri, isLoading }) {
             style={styles.styleButtonIcon} 
             onPress={()=>onSaveImageAsync()}/>
         </View>
+        
     </View>
     
     </>
@@ -192,4 +213,7 @@ const styles = StyleSheet.create({
       color:"white",
       
     },
+    styleButtonIconDel:{
+      color: "#ff0000a3",
+    }
 });

@@ -1,8 +1,9 @@
 import { Button, StyleSheet, View, Text, Image, Pressable } from "react-native";
+import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { BASE_URL } from "../../config";
 
 
-export default function HomeItem({ latLocation, lngLocation, address, date, uri , onPress}) {
+export default function HomeItem({ latLocation, lngLocation, address, date, uri , onPress, actionDel}) {
   
   return (
     <View style={styles.itemContainer}>
@@ -23,7 +24,15 @@ export default function HomeItem({ latLocation, lngLocation, address, date, uri 
         </View>
         
       </Pressable>
-      
+      <View style={styles.wrapperIcon}>
+        <View style={styles.wrapperIconItem}>
+          <AntDesign name="delete" 
+            style={styles.styleButtonIcon}
+            size={24} 
+            onPress={()=>actionDel()}/>
+          
+        </View>
+      </View>
     </View>
   );
 }
@@ -64,5 +73,24 @@ const styles = StyleSheet.create({
   },
   styleText:{
     fontSize: 12,
-  }
+  },
+  wrapperIcon:{
+    flex:0.2,
+    position:"absolute",
+    top:"10%",
+    right:20,
+  },
+  wrapperIconItem:{
+    backgroundColor:"#ff0000a3",
+    borderRadius:50,
+    width:40,
+    height:40,
+    marginBottom:20,
+    justifyContent:"center",
+    alignItems:"center"
+  },
+  styleButtonIcon:{
+    color:"white",
+    
+  },
 });
